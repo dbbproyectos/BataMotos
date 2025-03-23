@@ -20,6 +20,7 @@ mercadopago.configure({
 // Ruta para crear preferencia
 app.post("/crear-preferencia", async (req, res) => {
   try {
+    console.log(req.body);
     const { nombre, precio, cantidad } = req.body;
 
     // Validación segura de datos
