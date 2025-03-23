@@ -22,16 +22,6 @@ app.post("/crear-preferencia", async (req, res) => {
   try {
     console.log(req.body);
     const { nombre, precio, cantidad } = req.body;
-
-    // Validación segura de datos
-    if (!nombre || typeof precio !== "number" || precio <= 0) {
-      
-    console.log(nombre);
-    console.log(precio);
-    console.log(cantidad);
-      return res.status(400).json({ error: "Datos inválidos para la preferencia" });
-    }
-
     const preference = {
       items: [
         {
