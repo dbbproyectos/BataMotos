@@ -6,7 +6,9 @@ require("dotenv").config(); // ✅ Carga variables del archivo .env
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(cors({
+  origin: "https://batamotos-ead12.web.app"
+}));
 app.use(express.json());
 
 mercadopago.configure({
