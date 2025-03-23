@@ -20,23 +20,31 @@ mercadopago.configure({
 // Ruta para crear preferencia
 app.post("/crear-preferencia", async (req, res) => {
   try {
-    console.log(req.body);
-    const { nombre, precio, cantidad } = req.body;
-    const precioTwo = parseFloat(req.body.precio);
+    let { title, unit_price, quantity } = req.body;
+
+    console.log("🔹 Datos recibidos:", { title, unit_price, quantity });
+
+    unit_price = parseFloat(unit_price);
+    quantity = parseInt(quantity);
+
+    if (!title || isNaN(unit_price)) {
+      return res.status(400).json({ error: "Faltan datos o el precio no es un número válido." });
+    }
+
     const preference = {
       items: [
         {
-          title: `Sticker - ${nombre}`,
-          quantity: cantidad || 1,
-          unit_price: precioTwo,
+          title,
+          quantity: quantity || 1,
+          unit_price, // ya como número
           currency_id: "COP"
-        },
+        }
       ],
       back_urls: {
         success: "https://batamotos-ead12.web.app/success.html",
-        failure: "https://batamotos-ead12.web.app/error.html",
+        failure: "https://batamotos-ead12.web.app/error.html"
       },
-      auto_return: "approved",
+      auto_return: "approved"
     };
 
     const response = await mercadopago.preferences.create(preference);
