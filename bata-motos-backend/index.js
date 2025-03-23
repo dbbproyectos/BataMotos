@@ -14,7 +14,6 @@ app.use(express.json());
 mercadopago.configure({
   access_token: "TEST-1590247296827432-011621-3f413f95ab79018eb374df0daee810b4-641038179", 
 });
-console.log("📦 Datos recibidos:", req.body);
 
 app.post("/crear-preferencia", async (req, res) => {
   try {
