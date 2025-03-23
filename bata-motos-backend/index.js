@@ -22,6 +22,7 @@ app.post("/crear-preferencia", async (req, res) => {
   try {
     console.log(req.body);
     const { nombre, precio, cantidad } = req.body;
+    const precio = parseFloat(req.body.precio);
     const preference = {
       items: [
         {
