@@ -19,6 +19,11 @@ app.post("/crear-preferencia", async (req, res) => {
   try {
     const { nombre, precio, cantidad } = req.body;
 
+  if (!title || typeof unit_price !== "number") {
+  return res.status(400).json({ error: "Faltan datos o unit_price no es número" });
+  }
+
+
     const preference = {
       items: [
         {
