@@ -22,13 +22,13 @@ app.post("/crear-preferencia", async (req, res) => {
   try {
     console.log(req.body);
     const { nombre, precio, cantidad } = req.body;
-    const precio = parseFloat(req.body.precio);
+    const precioTwo = parseFloat(req.body.precio);
     const preference = {
       items: [
         {
           title: `Sticker - ${nombre}`,
           quantity: cantidad || 1,
-          unit_price: precio,
+          unit_price: precioTwo,
           currency_id: "COP"
         },
       ],
