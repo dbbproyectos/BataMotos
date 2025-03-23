@@ -17,14 +17,14 @@ mercadopago.configure({
 
 app.post("/crear-preferencia", async (req, res) => {
   try {
-    const { nombre, 11000, cantidad } = req.body;
+    const { nombre, precio, cantidad } = req.body;
 
     const preference = {
       items: [
         {
           title: `Sticker - ${nombre}`,
           quantity: cantidad || 1,
-          unit_price: 11000,
+          unit_price: precio,
         },
       ],
       back_urls: {
