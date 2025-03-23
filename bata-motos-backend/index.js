@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mercadopago = require("mercadopago");
-import dotenv from "dotenv";
+import dotenv = require("dotenv");
 
 dotenv.config();
 
