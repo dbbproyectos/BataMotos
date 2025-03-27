@@ -1,23 +1,50 @@
 const express = require("express");
 const cors = require("cors");
 const mercadopago = require("mercadopago");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Habilitar CORS solo desde tu frontend
-app.use(cors({
-  origin: "https://batamotos-ead12.web.app"
-}));
+app.use(cors({ origin: "https://batamotos-ead12.web.app" }));
 app.use(express.json());
 
-// Configurar Mercado Pago con tu token privado
+
 mercadopago.configure({
   access_token: "TEST-1590247296827432-011621-3f413f95ab79018eb374df0daee810b4-641038179",
 });
 
-// Ruta para crear preferencia
+
+async function enviarCorreoConfirmacion(datos, numerosGenerados) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'motospruebabata@gmail.com',
+      pass: 'Hola2025*' 
+    }
+  });
+
+  const html = `
+    <h2>¡Gracias por tu compra, ${datos.nombre}!</h2>
+    <p>Se registraron <strong>${datos.sticker}</strong> stickers correctamente.</p>
+    <p><strong>Números asignados:</strong></p>
+    <ul>
+      ${numerosGenerados.map(n => `<li>${n.toString().padStart(4, '0')}</li>`).join('')}
+    </ul>
+  `;
+
+  const mailOptions = {
+    from: 'Bata Motos motospruebabata@gmail.com,
+    to: datos.correo,
+    subject: 'Confirmación de compra - Bata Motos',
+    html
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+// 🧾 Ruta para crear preferencia de pago
 app.post("/crear-preferencia", async (req, res) => {
   try {
     let { title, unit_price, quantity } = req.body;
@@ -36,7 +63,7 @@ app.post("/crear-preferencia", async (req, res) => {
         {
           title,
           quantity: quantity || 1,
-          unit_price, // ya como número
+          unit_price,
           currency_id: "COP"
         }
       ],
@@ -56,7 +83,18 @@ app.post("/crear-preferencia", async (req, res) => {
   }
 });
 
-// Iniciar servidor
+app.post("/confirmar-compra", async (req, res) => {
+  const { datos, numerosGenerados } = req.body;
+
+  try {
+    await enviarCorreoConfirmacion(datos, numerosGenerados);
+    res.json({ success: true });
+  } catch (error) {
+    console.error("❌ Error al enviar correo:", error);
+    res.status(500).json({ success: false, error: "Error enviando correo" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en puerto ${PORT}`);
 });
