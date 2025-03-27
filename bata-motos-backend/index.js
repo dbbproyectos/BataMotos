@@ -35,7 +35,7 @@ async function enviarCorreoConfirmacion(datos, numerosGenerados) {
   `;
 
   const mailOptions = {
-    from: 'Bata Motos motospruebabata@gmail.com,
+    from: 'Bata Motos motospruebabata@gmail.com',
     to: datos.correo,
     subject: 'Confirmación de compra - Bata Motos',
     html
