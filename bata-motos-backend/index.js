@@ -7,22 +7,26 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// 🔒 Reemplaza por tu contraseña de aplicación de Gmail
+const GMAIL_USER = "motospruebabata@gmail.com";
+const GMAIL_PASS = "TU_CONTRASEÑA_DE_APLICACIÓN";
+
 app.use(cors({ origin: "https://batamotos-ead12.web.app" }));
 app.use(express.json());
 
-
+// ✅ Mercado Pago config
 mercadopago.configure({
-  access_token: "APP_USR-1590247296827432-011621-930d4609b6356600c53cbb3a6c26f0fe-641038179",
+  access_token: "TEST-1590247296827432-011621-3f413f95ab79018eb374df0daee810b4-641038179",
 });
 
-
+// ✅ Función para enviar correo
 async function enviarCorreoConfirmacion(datos, numerosGenerados) {
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
-      user: 'motospruebabata@gmail.com',
-      pass: 'Hola2025*' 
-    }
+      user: GMAIL_USER,
+      pass: GMAIL_PASS,
+    },
   });
 
   const html = `
@@ -30,15 +34,15 @@ async function enviarCorreoConfirmacion(datos, numerosGenerados) {
     <p>Se registraron <strong>${datos.sticker}</strong> stickers correctamente.</p>
     <p><strong>Números asignados:</strong></p>
     <ul>
-      ${numerosGenerados.map(n => `<li>${n.toString().padStart(4, '0')}</li>`).join('')}
+      ${numerosGenerados.map((n) => `<li>${n.toString().padStart(4, '0')}</li>`).join("")}
     </ul>
   `;
 
   const mailOptions = {
-    from: 'Bata Motos motospruebabata@gmail.com',
+    from: `"Bata Motos" <${GMAIL_USER}>`,
     to: datos.correo,
-    subject: 'Confirmación de compra - Bata Motos',
-    html
+    subject: "Confirmación de compra - Bata Motos",
+    html,
   };
 
   await transporter.sendMail(mailOptions);
@@ -64,14 +68,14 @@ app.post("/crear-preferencia", async (req, res) => {
           title,
           quantity: quantity || 1,
           unit_price,
-          currency_id: "COP"
-        }
+          currency_id: "COP",
+        },
       ],
       back_urls: {
         success: "https://batamotos-ead12.web.app/success.html",
-        failure: "https://batamotos-ead12.web.app/error.html"
+        failure: "https://batamotos-ead12.web.app/error.html",
       },
-      auto_return: "approved"
+      auto_return: "approved",
     };
 
     const response = await mercadopago.preferences.create(preference);
@@ -83,6 +87,7 @@ app.post("/crear-preferencia", async (req, res) => {
   }
 });
 
+// ✅ Ruta para confirmar compra y enviar correo
 app.post("/confirmar-compra", async (req, res) => {
   const { datos, numerosGenerados } = req.body;
 
@@ -90,11 +95,12 @@ app.post("/confirmar-compra", async (req, res) => {
     await enviarCorreoConfirmacion(datos, numerosGenerados);
     res.json({ success: true });
   } catch (error) {
-    console.error("❌ Error al enviar correo:", error);
+    console.error("❌ Error al enviar correo:", error.message);
     res.status(500).json({ success: false, error: "Error enviando correo" });
   }
 });
 
+// ✅ Iniciar servidor
 app.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en puerto ${PORT}`);
 });
