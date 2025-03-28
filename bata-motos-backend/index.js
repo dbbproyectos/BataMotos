@@ -12,7 +12,7 @@ app.use(express.json());
 
 
 mercadopago.configure({
-  access_token: "TEST-1590247296827432-011621-3f413f95ab79018eb374df0daee810b4-641038179",
+  access_token: "APP_USR-1590247296827432-011621-930d4609b6356600c53cbb3a6c26f0fe-641038179",
 });
 
 
