@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 8080;
 
 // 🔒 Reemplaza por tu contraseña de aplicación de Gmail
 const GMAIL_USER = "motospruebabata@gmail.com";
-const GMAIL_PASS = "TU_CONTRASEÑA_DE_APLICACIÓN";
+const GMAIL_PASS = "Hola2025*";
 
 app.use(cors({ origin: "https://batamotos-ead12.web.app" }));
 app.use(express.json());
